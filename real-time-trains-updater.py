@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) by Pawel Gasiorowski (2018) 
+# MIT License
+#
+# Copyright (c) 2018 Pawel Gasiorowski  
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -61,39 +63,24 @@ ns = {'lt':'http://thalesgroup.com/RTTI/2012-01-13/ldb/types',
 'lt2':'http://thalesgroup.com/RTTI/2014-02-20/ldb/types',
 'lt3':'http://thalesgroup.com/RTTI/2015-05-14/ldb/types'}
 
-body = """<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+def getRequestBody(token, rows, origin, destination):
+    body = """<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
 			 xmlns:typ="http://thalesgroup.com/RTTI/2013-11-28/Token/types" 
 			 xmlns:ldb="http://thalesgroup.com/RTTI/2017-10-01/ldb/">
 	  	<soap:Header>
 			<typ:AccessToken>
-				<typ:TokenValue>""" + args.token + """</typ:TokenValue>
+				<typ:TokenValue>""" + token + """</typ:TokenValue>
 			</typ:AccessToken>
 		</soap:Header>
 		<soap:Body>
 			<ldb:GetDepBoardWithDetailsRequest>
-				<ldb:numRows>""" + args.rows + """</ldb:numRows>
-				<ldb:crs>""" + args.origin + """</ldb:crs>
-				<ldb:filterCrs>""" + args.destination + """</ldb:filterCrs>
+				<ldb:numRows>""" + rows + """</ldb:numRows>
+				<ldb:crs>""" + origin + """</ldb:crs>
+				<ldb:filterCrs>""" + destination + """</ldb:filterCrs>
 			</ldb:GetDepBoardWithDetailsRequest>
 		</soap:Body>
-	 </soap:Envelope>"""
-
-body_return = """<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
-			 xmlns:typ="http://thalesgroup.com/RTTI/2013-11-28/Token/types" 
-			 xmlns:ldb="http://thalesgroup.com/RTTI/2017-10-01/ldb/">
-	  	<soap:Header>
-			<typ:AccessToken>
-				<typ:TokenValue>""" + args.token + """</typ:TokenValue>
-			</typ:AccessToken>
-		</soap:Header>
-		<soap:Body>
-			<ldb:GetDepBoardWithDetailsRequest>
-				<ldb:numRows>""" + args.rows + """</ldb:numRows>
-				<ldb:crs>""" + args.destination + """</ldb:crs>
-				<ldb:filterCrs>""" + args.origin + """</ldb:filterCrs>
-			</ldb:GetDepBoardWithDetailsRequest>
-		</soap:Body>
-	 </soap:Envelope>"""
+	    </soap:Envelope>"""
+    return body
 
 def printTimeTable(origin_name, origin_loc_name, dest_name, time_std, time_etd, platform, cars_num, notes):
     print('{:<35s}{:<35s}{:<30s}{:<15s}{:<12s}{:<10s}{:<10s}{:<20}'.format(
@@ -169,11 +156,11 @@ while True:
     os.system('clear')
     dt = datetime.datetime.today()
     at_time = "%02u/%02u/%04u %02u:%02u:%02u" % (dt.day, dt.month, dt.year, dt.hour, dt.minute, dt.second)
-    response = requests.post(url, data=body, headers=headers)
+    response = requests.post(url, data=getRequestBody(args.rows, args.origin, args.destination), headers=headers)
     #print(response.content)
     getTimeTable(response, at_time)
     if args.add_return:
-        response_return = requests.post(url, data=body_return, headers=headers)
+        response_return = requests.post(url, data=getRequestBody(args.rows, args.destination, args.origin), headers=headers)
         #print(response_return.content)
         getTimeTable(response_return, at_time)
     time.sleep(args.refresh_rate - ((time.time() - starttime) % args.refresh_rate))
