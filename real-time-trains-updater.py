@@ -156,11 +156,11 @@ while True:
     os.system('clear')
     dt = datetime.datetime.today()
     at_time = "%02u/%02u/%04u %02u:%02u:%02u" % (dt.day, dt.month, dt.year, dt.hour, dt.minute, dt.second)
-    response = requests.post(url, data=getRequestBody(args.rows, args.origin, args.destination), headers=headers)
+    response = requests.post(url, data=getRequestBody(args.token, args.rows, args.origin, args.destination), headers=headers)
     #print(response.content)
     getTimeTable(response, at_time)
     if args.add_return:
-        response_return = requests.post(url, data=getRequestBody(args.rows, args.destination, args.origin), headers=headers)
+        response_return = requests.post(url, data=getRequestBody(args.token, args.rows, args.destination, args.origin), headers=headers)
         #print(response_return.content)
         getTimeTable(response_return, at_time)
     time.sleep(args.refresh_rate - ((time.time() - starttime) % args.refresh_rate))
