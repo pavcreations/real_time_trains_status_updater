@@ -1,2 +1,5 @@
-# real_time_trains_status_updater
-A real time trains status updater script
+# Real-Time Trains Status Updater 
+
+A handy python script that outputs real-time data into the terminal console about the given train route in the UK. 
+
+
