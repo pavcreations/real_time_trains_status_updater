@@ -15,7 +15,7 @@ In order to use the script, a security token needs to be generated and supplied 
 `--add-return`: Additional timetable that will show return services for the journey at present time<br />
 
 <h3>Additional Notes:</h3>
-Tested with `Python 3.7.1`
+Tested with `Python 3.7.1`<br />
 The script relies on `requests` python module. The installation instructions can be found here: http://docs.python-requests.org/en/master/user/install/<br />
 
 <h3>Example:</h3>
