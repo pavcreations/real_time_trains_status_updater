@@ -164,5 +164,3 @@ while True:
         #print(response_return.content)
         getTimeTable(response_return, at_time)
     time.sleep(args.refresh_rate - ((time.time() - starttime) % args.refresh_rate))
-
-
