@@ -12,3 +12,12 @@ Parameters:<br />
 `--destination`: The destination location of the journey. It needs to be provided in CRS 3-letter code for a station. The list of all available CRS codes can be found at http://www.nationalrail.co.uk/stations_destinations/48541.aspx (default = WAT)<br />
 `--rows`: The maximum number of rows to be returned from API and output in the timetable (default = 4)<br />
 `--add-return`: Additional timetable that will show return services for the journey at present time<br />
+
+Additional Notes:<br />
+
+Tested with `Python 3.7.1`
+The script relies on `requests` python module. The installation instructions can be found here: http://docs.python-requests.org/en/master/user/install/<br />
+
+Examples:<br />
+`./real-time-trains-updater.py --origin BCE --destination WAT --rows 5 --add-return --token xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`<br />
+where `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` is your generated token.
