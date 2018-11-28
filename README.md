@@ -6,7 +6,7 @@ In order to use the script, a security token needs to be generated and supplied 
 
 Parameters:<br />
 <br />
-`--refresh-rate`: how often the time table should update in seconds (default = 30)<br />
+`--refresh-rate`: how often the timetable should update in seconds (default = 30)<br />
 `--token`: The security token provided by National Rail Services (format = xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)<br />
 `--origin`: The starting location of the journey. It needs to be provided in CRS 3-letter code for a station. The list of all available CRS codes can be found at http://www.nationalrail.co.uk/stations_destinations/48541.aspx (default = RDG)<br />
 `--destination`: The destination location of the journey. It needs to be provided in CRS 3-letter code for a station. The list of all available CRS codes can be found at http://www.nationalrail.co.uk/stations_destinations/48541.aspx (default = WAT)<br />
