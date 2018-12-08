@@ -42,6 +42,7 @@ parser.add_argument("--origin", default='RDG', help='The starting location of th
 parser.add_argument("--destination", default='WAT', help='The destination location of the journey (default WAT)')
 parser.add_argument("--rows", default='4', help='The number of rows to be returned from API (default 4)')
 parser.add_argument("--add-return", action="store_true", help='Additional table that will show return services at present time')
+parser.add_argument("--less", action="store_true", help='Display less information')
 args = parser.parse_args()
 
 if args.token is None:
@@ -93,26 +94,41 @@ def printTimeTable(origin_name, origin_loc_name, dest_name, time_std, time_etd, 
         str(cars_num), 
         notes))
 
+def printTimeTableLess(origin_name, dest_name, time_std, time_etd, platform):
+    print('{:<20s}{:<20s}{:<15s}{:<15s}{:<15s}'.format(
+        str(origin_name),
+        str(dest_name), 
+        str(time_std),
+        str(time_etd), 
+        str(platform)))
+
 def getTimeTable(response, at_time):
     xml = ET.fromstring(response.content)
-    print(dash)
-    print('{:^167}'.format("MESSAGES FOR THIS ROUTE"))
-    print(dash)
     messages = xml.findall('.//lt:message', ns)
     origin_loc_from = xml.find('.//lt4:locationName', ns).text
     origin_crs_from = xml.find('.//lt4:crs', ns).text
     destination_loc = xml.find('.//lt4:filterLocationName', ns).text
     destination_crs = xml.find('.//lt4:filtercrs', ns).text
-    for message in messages:
-        print('{:<167s}'.format(textwrap.fill(str(message.text), width=167)))
-        if len(messages) > 1:
-            print('\n')
+ 
+    if args.less:
+        print(dash_less)         
+        print('{:<20s}{:<20s}{:<15s}{:<15s}{:<15s}'.format("ORIGIN", "DEST", "DEPT", "ETA", "PLAT"))
+        print(dash_less) 
+    else:
+        print(dash)
+        print('{:^167}'.format("MESSAGES FOR THIS ROUTE"))
+        print(dash)
+        for message in messages:
+            print('{:<167s}'.format(textwrap.fill(str(message.text), width=167)))
+            if len(messages) > 1:
+                print('\n')
 
-    print(dash)
-    print('{:^167}'.format("LIVE TRAINS UPDATE - " + origin_loc_from + " - " + destination_loc + " AT " + at_time))
-    print(dash)
-    print('{:<35s}{:<35s}{:<30s}{:<15s}{:<12s}{:<10s}{:<10s}{:<20}'.format("ORIGIN", "FROM", "TO", "DEPARTURE", "ETA", "PLATFORM", "CARS NUM", "NOTES"))
-    print(dash)
+        print(dash)
+        print('{:^167}'.format("LIVE TRAINS UPDATE - " + origin_loc_from + " - " + destination_loc + " AT " + at_time))
+        print(dash)
+        print('{:<35s}{:<35s}{:<30s}{:<15s}{:<12s}{:<10s}{:<10s}{:<20}'.format("ORIGIN", "FROM", "TO", "DEPARTURE", "ETA", "PLATFORM", "CARS NUM", "NOTES"))
+        print(dash)
+
     destinations = xml.findall('.//lt7:service', ns)
     for service in destinations:
         time_etd = service.findtext('{' + ns['lt4'] + '}etd')
@@ -134,24 +150,35 @@ def getTimeTable(response, at_time):
         else:
             cancel_reason = textwrap.wrap(cancel_reason.text, width=20)
         
-        if isinstance(cancel_reason, list):
-            printTimeTable(str(origin_name) + " - " + str(origin_crs), 
-                           str(origin_loc_from) + " - " + str(origin_crs_from),
-                           str(destination_loc) + " - " + str(destination_crs),
-                           str(time_std), str(time_etd),
-                           str(platform), str(cars_num), 
-                           str(cancel_reason[0]))
-            for i in range(1, len(cancel_reason)):
-                printTimeTable("", "", "", "", "", "", "", str(cancel_reason[i]))
+        if args.less:
+          
+            printTimeTableLess(str(origin_name), 
+                               str(destination_loc),
+                               str(time_std), 
+                               str(time_etd),
+                               str(platform)) 
+
         else:
-            printTimeTable(str(origin_name) + " - " + str(origin_crs), 
-                           str(origin_loc_from) + " - " + str(origin_crs_from),
-                           str(destination_loc) + " - " + str(destination_crs),
-                           str(time_std), str(time_etd),
-                           str(platform), str(cars_num), 
-                           str(cancel_reason))
+
+            if isinstance(cancel_reason, list):
+                printTimeTable(str(origin_name) + " - " + str(origin_crs), 
+                               str(origin_loc_from) + " - " + str(origin_crs_from),
+                               str(destination_loc) + " - " + str(destination_crs),
+                               str(time_std), str(time_etd),
+                               str(platform), str(cars_num), 
+                               str(cancel_reason[0]))
+                for i in range(1, len(cancel_reason)):
+                    printTimeTable("", "", "", "", "", "", "", str(cancel_reason[i]))
+            else:
+                printTimeTable(str(origin_name) + " - " + str(origin_crs), 
+                               str(origin_loc_from) + " - " + str(origin_crs_from),
+                               str(destination_loc) + " - " + str(destination_crs),
+                               str(time_std), str(time_etd),
+                               str(platform), str(cars_num), 
+                               str(cancel_reason))
 
 dash = '-' * 167
+dash_less = '-' * 75
 while True:
     os.system('clear')
     dt = datetime.datetime.today()
