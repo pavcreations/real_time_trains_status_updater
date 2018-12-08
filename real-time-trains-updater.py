@@ -95,7 +95,7 @@ def printTimeTable(origin_name, origin_loc_name, dest_name, time_std, time_etd, 
         notes))
 
 def printTimeTableLess(origin_name, dest_name, time_std, time_etd, platform):
-    print('{:<20s}{:<20s}{:<15s}{:<15s}{:<15s}'.format(
+    print('{:<18s}{:<18s}{:<8s}{:<10s}{:<8s}'.format(
         str(origin_name),
         str(dest_name), 
         str(time_std),
@@ -112,7 +112,7 @@ def getTimeTable(response, at_time):
  
     if args.less:
         print(dash_less)         
-        print('{:<20s}{:<20s}{:<15s}{:<15s}{:<15s}'.format("ORIGIN", "DEST", "DEPT", "ETA", "PLAT"))
+        print('{:<18s}{:<18s}{:<8s}{:<10s}{:<8s}'.format("ORIGIN", "DEST", "DEPT", "ETA", "PLAT"))
         print(dash_less) 
     else:
         print(dash)
@@ -178,7 +178,7 @@ def getTimeTable(response, at_time):
                                str(cancel_reason))
 
 dash = '-' * 167
-dash_less = '-' * 75
+dash_less = '-' * 58
 while True:
     os.system('clear')
     dt = datetime.datetime.today()
